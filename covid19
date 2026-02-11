@@ -1,1 +1,37 @@
 
+# 3D Line Plot and Length Estimation of SARS-CoV-2 RNA Model
+
+import numpy as np
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+
+# Parameter range
+t = np.linspace(0, 3, 1000)
+
+# Parametric equations
+x = 2*np.sqrt(2)*np.sin(t)
+y = 2*np.sqrt(2)*np.cos(t)
+z = t
+
+# Create 3D plot
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+ax.plot(x, y, z, linewidth=2)
+
+ax.set_xlabel("X(t)")
+ax.set_ylabel("Y(t)")
+ax.set_zlabel("Z(t)")
+ax.set_title("3D Line Plot of Single-Stranded RNA SARS-CoV-2 Model")
+
+plt.show()
+
+# ---- Length Calculation ----
+dx_dt = 2*np.sqrt(2)*np.cos(t)
+dy_dt = -2*np.sqrt(2)*np.sin(t)
+dz_dt = np.ones_like(t)
+
+speed = np.sqrt(dx_dt**2 + dy_dt**2 + dz_dt**2)
+
+length = np.trapz(speed, t)
+
+print("Estimated Length of RNA Structure from 0 < t < 3:", length)
