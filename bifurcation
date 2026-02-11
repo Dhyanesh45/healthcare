@@ -1,0 +1,28 @@
+import numpy as np
+
+# Coefficient matrix
+A = np.array([
+    [1, 1, 0],
+    [0, 1, -1],
+    [1, 0, 0],
+    [0, 0, 1]
+], dtype=float)
+
+# RHS vector
+B = np.array([50, 30, 10, 90], dtype=float)
+
+# Solve using least squares (since 4 eqns, 3 unknowns but consistent)
+X, residuals, rank, s = np.linalg.lstsq(A, B, rcond=None)
+
+print("Solution [x, y, z]:")
+print(X)
+
+print("\nRank of A:", np.linalg.matrix_rank(A))
+print("Rank of Augmented Matrix [A|B]:",
+      np.linalg.matrix_rank(np.column_stack((A, B))))
+
+print("\nNorm of solution vector (L2 norm):",
+      np.linalg.norm(X))
+
+print("\nNullity of A:",
+      A.shape[1] - np.linalg.matrix_rank(A))
