@@ -1,28 +1,66 @@
 import numpy as np
 
-# Coefficient matrix
+# -------------------------------------------------
+# Unknown variables:
+# x = top branch flow
+# y = left vertical flow
+# z = bottom branch flow
+# -------------------------------------------------
+
+# Construct coefficient matrix A
 A = np.array([
-    [1, 1, 0],
-    [0, 1, -1],
-    [1, 0, 0],
-    [0, 0, 1]
+    [1, 1, 0],   # x + y = 50
+    [0, 1, -1],  # y - z = 30
+    [1, 0, 0],   # x = 10
+    [0, 0, 1]    # z = 90
 ], dtype=float)
 
-# RHS vector
-B = np.array([50, 30, 10, 90], dtype=float)
+# Construct RHS vector B
+B = np.array([
+    50,
+    30,
+    10,
+    90
+], dtype=float)
 
-# Solve using least squares (since 4 eqns, 3 unknowns but consistent)
-X, residuals, rank, s = np.linalg.lstsq(A, B, rcond=None)
+# -------------------------------------------------
+# Solve the system using least squares
+# (System is consistent and full rank)
+# -------------------------------------------------
 
-print("Solution [x, y, z]:")
-print(X)
+X, residuals, rank_A, singular_vals = np.linalg.lstsq(A, B, rcond=None)
 
-print("\nRank of A:", np.linalg.matrix_rank(A))
-print("Rank of Augmented Matrix [A|B]:",
-      np.linalg.matrix_rank(np.column_stack((A, B))))
+# Extract solutions
+x, y, z = X
 
-print("\nNorm of solution vector (L2 norm):",
-      np.linalg.norm(X))
+print("Solution:")
+print("x =", x)
+print("y =", y)
+print("z =", z)
 
-print("\nNullity of A:",
-      A.shape[1] - np.linalg.matrix_rank(A))
+# -------------------------------------------------
+# Rank Calculations
+# -------------------------------------------------
+
+rank_A = np.linalg.matrix_rank(A)
+rank_augmented = np.linalg.matrix_rank(np.column_stack((A, B)))
+
+print("\nRank of A =", rank_A)
+print("Rank of Augmented Matrix [A|B] =", rank_augmented)
+
+# -------------------------------------------------
+# Nullity (Rank-Nullity Theorem)
+# nullity = number of columns - rank
+# -------------------------------------------------
+
+nullity = A.shape[1] - rank_A
+print("Nullity of A =", nullity)
+
+# -------------------------------------------------
+# Norms of solution vector
+# -------------------------------------------------
+
+print("\nNorms of Solution Vector:")
+print("L1 Norm =", np.linalg.norm(X, 1))
+print("L2 Norm =", np.linalg.norm(X, 2))
+print("Infinity Norm =", np.linalg.norm(X, np.inf))
